@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>ArcGIS Mileage Calculator</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+            background: #f7f7f7;
+        }
+        .readonly {
+            background:transparent;
+            width:140px;
+            font-weight:bold;
+            border: none;
+            text-align:right;
+        }
+        .pointer {
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- Expense Report -->
+<div class="container">
+    <div class="mileageCalculator" id="exp_mileage_calc_row_1">
+        <div class="clearfix"><h3>Mileage Calculator using <a href="https://developers.arcgis.com">ArcGIS Online REST API</a></h3></div>
+        <div class="row">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h5>Instructions</h5>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>Enter at least 2 addresses by keying into each address line, or using the Agency dropdown to select an address.</li>
+                        <li>Click Calculate to call the ArcGIS REST API. The Mileage input will display the calculated mileage for a route including each destination specified.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2">
+                <div id="exp_mileage_row_1">
+                    <div class="form-group">
+                        <label for="exp_from_row_addr1_1">Address 1</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr1_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr1_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr1_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr1_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr1_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr2_1">Address 2</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr2_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr2_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr2_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr2_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr2_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr3_1">Address 3</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr3_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr3_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr3_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr3_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr3_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr4_1">Address 4</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr4_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr4_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr4_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr4_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr4_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr5_1">Address 5</label>
+                        <div class="input-group">
+
+                            <input class="rowinput destination form-control" id="exp_from_row_addr5_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr5_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr5_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr5_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr5_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr6_1">Address 6</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr6_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr6_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr6_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr6_geocode_6" />
+                        <input class="hidden" id="exp_from_row_addr6_magickey_6" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr7_1">Address 7</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr7_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr7_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr7_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr7_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr7_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr8_1">Address 8</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr8_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr8_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr8_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr8_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr8_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr9_1">Address 9</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr9_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr9_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr9_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr9_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr9_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp_from_row_addr10_1">Address 10</label>
+                        <div class="input-group">
+                            <input class="rowinput destination form-control" id="exp_from_row_addr10_1">
+                            <div class="input-group-btn">
+                                <button id="exp_agency_dropdown_addr10_1" type="button" class="btn btn-default dropdown-toggle agency-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Agencies <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="exp_agency_dropdown_list_addr10_1">
+                                </ul>
+                            </div>
+                        </div>
+                        <input class="hidden" id="exp_from_row_addr10_geocode_1" />
+                        <input class="hidden" id="exp_from_row_addr10_magickey_1" />
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="calculateRoute_row_1" class="btn btn-success btn-block calctrip">Calculate</button>
+                </div>
+
+                <div class="" id="exp_mileage_total_row_1">
+                    <div class="form-group">
+                        <label for="exp_calcmileage_row_1">Mileage</label>
+                        <input class="rowinput mileage form-control input-sm disabled" disabled="" id="exp_calcmileage_row_1">
+                        <div class="help-block">If your actual mileage is different, enter that amount.</div>
+                    </div>
+                    <div class="form-group" id="exp_override_justgroup_row_1" style="display: none;">
+                        <label for="exp_override_just_row_1">Adjusted Mileage Reason</label>
+                        <input class="rowinput mileagejust form-control input-sm" id="exp_override_just_row_1">
+                        <div class="help-block">Enter the reason for the mileage difference.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="//code.jquery.com/jquery-3.1.1.js" crossorigin="anonymous"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script type="text/javascript">
+
+    var loaded = false;
+    var esriToken = "";
+    var mileageCalculator = $('.mileageCalculator');
+
+    var agencyAddresses = [
+        {
+            "facility": "White House",
+            "fullAddress": "1600 Pennsylvania Ave NW, Washington, DC 20500",
+            "address": "1600 Pennsylvania Ave NW",
+            "city": "Washington",
+            "state": "DC",
+            "zip": 20500,
+            "lat":-77.03642851299963,
+            "long": 38.89792908200047
+        },
+        {
+            "facility": "United States Capitol",
+            "fullAddress": "100 E Capitol St NE Washington, DC 20003",
+            "address": "100 E Capitol St NE",
+            "city": "Washington",
+            "state": "DC",
+            "zip": 20003,
+            "lat":-77.01252663399964,
+            "long": 38.88980730300045
+        }
+    ];
+    var autocompleteList = [];
+    var addressAutocompleteOptions = {
+        minLength: 3,
+        source: function (request, response) {
+            var url = "//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text=" + request.term + "&location=--77.03642851299963%2C38.89792908200047&f=json";
+            $.ajax({
+                url:url
+            })
+                    .done(function(data) {
+                        autocompleteList = [];
+                        data = JSON.parse(data);
+                        for (var i=0; i<data.suggestions.length; i++) {
+                            autocompleteList.push({
+                                magickey:data.suggestions[i].magicKey,
+                                value:data.suggestions[i].text,
+                                label:data.suggestions[i].text
+                            });
+                        }
+                        response(autocompleteList);
+                    });
+        },
+        select: function (event, ui) {
+            var magickey = ui.item.magickey;
+            var address = ui.item.value;
+            var rowNum = getRowNumberFromObject($(this));
+            var addrRowNum = getAddressRowNumberFromObject($(this));
+            $('#exp_from_row_addr'+addrRowNum+'_'+rowNum).data('magickey',magickey);
+            $('#exp_from_row_addr'+addrRowNum+'_magickey_'+rowNum).val(magickey);
+            geocodeAttempt(address,magickey,addrRowNum,rowNum)
+        }
+    };
+
+    $(document).ready(function(){
+        if (loaded) {
+            return;
+        }
+        loaded = true;
+
+        runEsriQuery();
+        $(".destination").autocomplete(addressAutocompleteOptions);
+    });
+
+
+
+    function runEsriQuery() {
+        //This function is used if Forms InMotion is not present
+        if (typeof Forms_InMotion === 'undefined') { //fallback token
+            esriToken = "nK3iq3tpbq5mcQrwpGXptjFTaHNlMFvUPNzcTDQulCIOgxGYwy4H3juhAwYgIIa4zr5p0rUXkr8BeUwA_f61lDxuegagsWBExzc7KoSzYVLmskaHyl18TQ3xkjC-mqQTZ61vKaogdSBlTxS1Ag7FCw..s";
+            console.log('Esri token fallback used');
+        } else {
+            Forms_inMotion("esritoken", "esricallback");
+        }
+
+    }
+
+    function esricallback(data) {
+        data = JSON.parse(data);
+        if (data.OK) {
+            esriToken = data.responseString;
+            console.log("We have an Esri token");
+        }
+        else if (data.responseContent && data.responseContent=="UPDATING") {
+            //the server had to generate a new token.  try this call again
+            runEsriQuery();
+        }
+    }
+
+    mileageCalculator.on('keyup', '.mileagejust', function () {
+        var rowNum = getRowNumberFromObject($(this));
+        var calculatedMileage = $("#exp_calcmileage_row_" + rowNum).data('calculatedValue');
+        var re = new RegExp("^\\[" + calculatedMileage + "\\] .*$", "g");
+        if (!$(this).val().match(re)) {
+            $(this).val($(this).data('savedValue'));
+        }
+        else {
+            $(this).data('savedValue', $(this).val());
+        }
+    });
+
+
+    mileageCalculator.on('click', '.calctrip', function () {
+        var rowNum = getRowNumberFromObject($(this));
+        var miles = "";
+        $('#exp_calcmileage_row_' + rowNum).val(miles);
+        calculateRoute(rowNum);
+    });
+
+    function calculateRoute(rowNum) {
+        var stops = [];
+        var destinationRow = $('#exp_mileage_row_'+rowNum+' .destination');
+        var numStopsWithData = 0;
+        destinationRow.each(function() {
+            var destinationCoordinates = $(this).data('coordinates');
+            console.log(destinationCoordinates);
+            if (typeof destinationCoordinates !== 'undefined') {
+                numStopsWithData++;
+                stops.push(destinationCoordinates);
+            }
+        });
+
+        if (numStopsWithData >= 2) {
+            var stopsAsString = stops.join(';');
+            var requestUrl = "//route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?stops=" +
+                    stopsAsString +
+                    ";&token=" +
+                    esriToken +
+                    "&restrictionAttributeNames=Avoid Carpool Roads, Avoid Gates, Avoid Private Roads, Avoid Unpaved Roads, Driving an Automobile, Roads Under Construction Prohibited, Through Traffic Prohibited" +
+                    "&f=json";
+            console.log(requestUrl);
+            $.ajax({
+                url:requestUrl
+            })
+                    .done(function(data) {
+                        data = JSON.parse(data);
+                        console.log(data);
+                        miles = Number(data.routes.features[0].attributes.Total_Miles).toFixed(2);
+                        $("#exp_calcmileage_row_" + rowNum).data("calculatedValue", miles);
+                        $('#exp_calcmileage_row_' + rowNum).val(miles);
+                        $('.mileage').trigger('change');
+                    });
+        } else {
+            console.log('you need at least 2 stops to calculate route')
+        }
+    }
+
+    mileageCalculator.on('blur', '.mileage', function () {
+        var rowNum = getRowNumberFromObject($(this));
+        if ($(this).val() == "") {
+            return;
+        }
+        if ($(this).val() != $(this).data("calculatedValue")) {
+            $("#exp_override_justgroup_row_" + rowNum).show();
+            $("#exp_override_justgroup_row_" + rowNum).parents("tr").find('input').addClass("mileagevariance");
+            $("#exp_override_just_row_" + rowNum).focus();
+            $("#exp_override_just_row_" + rowNum).data('savedValue', "[" + $(this).data("calculatedValue") + "] ");
+            $("#exp_override_just_row_" + rowNum).val($("#exp_override_just_row_" + rowNum).data('savedValue'));
+        }
+        else {
+            $("#exp_override_just_row_" + rowNum).hide();
+            $("#exp_override_just_row_" + rowNum).parents("tr").find('input').removeClass("mileagevariance");
+            $("#exp_override_just_row_" + rowNum).val("");
+        }
+    });
+
+    mileageCalculator.on('change', '.mileage', function () {
+        var rowNum = getRowNumberFromObject($(this));
+        if ($(this).val().length > 0) {
+            var calculatedExpense = Number($(this).val()) * mileageReimbursementRate;
+            calculatedExpense = calculatedExpense.toFixed(2);
+            $("#exp_amount_row_" + rowNum).val(calculatedExpense);
+            $("#exp_line_amount_row_" + rowNum).val(calculatedExpense);
+            $("#exp_line_amount_row_" + rowNum).change();
+        }
+    });
+
+    mileageCalculator.on('click', '.agency-dropdown-button', function () {
+        var addrRowNum = getAddressRowNumberFromObject($(this));
+        var rowNum = getRowNumberFromObject($(this));
+        /*populate agency dropdown*/
+        for (var a = 0; a < agencyAddresses.length; a++) {
+            $('#exp_agency_dropdown_list_addr'+addrRowNum+'_'+rowNum).append('<li><a class="agencyDropdownClick pointer" onclick="agencyAddressClicked(\''+agencyAddresses[a].fullAddress+'\','+agencyAddresses[a].lat+','+agencyAddresses[a].long+', '+rowNum+', '+addrRowNum+')" data-address="'+ agencyAddresses[a].fullAddress +'">'+agencyAddresses[a].facility+'</a></li>');
+        }
+    });
+
+    function getRowNumberFromObject(obj) {
+        var id = obj.attr("id");
+        return (id.substring(id.lastIndexOf("_") + 1));
+    }
+
+    function getAddressRowNumberFromObject(obj) {
+        var id = obj.attr("id");
+        var start = id.indexOf('_addr')+5;
+        var end = id.indexOf('_',start);
+        return id.substring(start,end);
+    }
+
+    function geocodeAttempt(address,magickey,addrRowNum,rowNum) {
+        if (address == '' || magickey == '') {
+            return;
+        }
+        var requestUrl = "//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&singleLine=" + address + "&magicKey=" + magickey;
+        $.ajax({
+            url:requestUrl
+        })
+                .done(function(data) {
+                    //console.log(data);
+                    data = JSON.parse(data);
+                    var x = data.candidates[0].location.x;
+                    var y = data.candidates[0].location.y;
+                    var coordinates = x + "," + y;
+                    $('#exp_from_row_addr'+addrRowNum+'_'+rowNum).data('coordinates',coordinates);
+                    $('#exp_from_row_addr'+addrRowNum+'_geocode_'+rowNum).val(coordinates);
+                });
+    }
+
+    function agencyAddressClicked(address, lat, long, rowNum, addrRowNum) {
+        var coordinates = lat + ',' + long;
+        $('#exp_from_row_addr'+addrRowNum+'_'+rowNum).data('coordinates',coordinates).val(address);
+        $('#exp_from_row_addr'+addrRowNum+'_geocode_'+rowNum).val(coordinates);
+    }
+
+
+</script>
+</body>
+</html>
