@@ -34,7 +34,7 @@
     <div class="mileageCalculator" id="exp_mileage_calc_row_1">
         <div class="clearfix"><h3>Mileage Calculator using <a href="https://developers.arcgis.com">ArcGIS Online REST API</a></h3></div>
         <div class="row">
-            <div class="panel">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h5>Instructions</h5>
                 </div>
@@ -45,7 +45,14 @@
                     </ul>
                 </div>
             </div>
-
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h5>Warning</h5>
+                </div>
+                <div class="panel-body">
+                    <p>This sample uses a short-term token for ArcGIS, that has likely expired by the time you are accessing it. Autocomplete and Agency dropdown functionality will work, but mileage calculation will not.</p>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2">
